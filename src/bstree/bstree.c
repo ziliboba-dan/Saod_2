@@ -13,50 +13,51 @@ bstree *bstree_create(char *key, int value)
 		node->value = value;
 		node->left = NULL;
 		node->right = NULL;
+		//printf("%s\n", node->key);
 		return node;
 	}
+	
 	return NULL;
 }
 
-bstree *bstree_add(bstree *tree, char *key, int value)
+void bstree_add(bstree *tree, char *key, int value)
 {	
+	bstree *parent, *node;
 	if (tree == NULL) {
-		tree = bstree_create(key, value);
-		return tree;
+		return ;
 	}
 	
-	int cmp;
-	cmp = strcmp(key, tree->key);
-	bstree *root;
-	root = tree;
-
-	if (cmp == 0) {
-		tree->value = value;
-		return tree;
-	} else if (cmp < 0) {
-		tree->left = bstree_add(tree->left, key, value);
-	} else {
-		tree->right = bstree_add(tree->right, key, value);
+	for (parent = tree; tree != NULL; ) {
+		parent = tree;
+		if (value < tree->value) {
+			tree = tree->left;
+		} else if (value > tree->value) {
+			tree = tree->right;
+		} else {
+			return;
+		}
 	}
-	return root;
+	node = bstree_create(key, value);
+	if (value < tree->value) {
+		parent->left = node;
+	} else {
+		parent->right = node;
+	}
 }
 
-bstree *bstree_lookup(bstree *tree, char *key)
-{
+bstree *bstree_lookup(bstree *tree, int value)
+{	
 	
-	if (tree == NULL) {
-		return NULL;
+	while (tree != NULL) {
+		if (value == tree->value) {
+			return tree;
+		} else if (value < tree->value) {
+			tree = tree->left;
+		} else {
+			tree = tree->right;
+		}
 	}
-	
-    	int cmp = strcmp(key, tree->key);
-   
-	if (cmp == 0) {
-		return tree;
-	} else if (cmp < 0) {
-		return bstree_lookup(tree->left, key);
-	} else {
-		return bstree_lookup(tree->right, key);
-	}
+	return tree;
 }
 			
 bstree *bstree_min(bstree *tree)
@@ -64,7 +65,8 @@ bstree *bstree_min(bstree *tree)
 	if (tree == NULL) {
 		return NULL;
 	}
-	while (tree->left !=NULL) {
+	while (tree->left != NULL) {
+		printf("%s\n", tree->key);
 		tree = tree->left;
 	}
 	return tree;
@@ -75,7 +77,7 @@ bstree *bstree_max(bstree *tree)
 	if (tree == NULL) {
 		return NULL;
 	}
-	while (tree->right !=NULL) {
+	while (tree->right != NULL) {
 		tree = tree->right;
 	}
 	return tree;

@@ -11,8 +11,8 @@ typedef struct bstree {
 } bstree;
 
 bstree *bstree_create(char *key, int value);
-bstree *bstree_add(bstree *tree, char *key, int value);
-bstree *bstree_lookup(bstree *tree, char *key);
+void bstree_add(bstree *tree, char *key, int value);
+bstree *bstree_lookup(bstree *tree, int value);
 bstree *bstree_min(bstree *tree);
 bstree *bstree_max(bstree *tree);
 
